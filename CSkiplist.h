@@ -173,8 +173,8 @@ void CSkipList<K, V>::DumpFile() {
 		std::cout << node->GetKey() << ":" << node->GetValue() << ";\n";
 		node = node->m_pForward[0];
 	}
-	for (int i = 0; i < m_cBuf->Size(); ++i) {
-		m_sFileStream.write(m_cBuf->GetCurData(), sizeof(char));
+	for (int i = 0; i < m_cBuf->size(); ++i) {
+		m_sFileStream.write(&(*m_cBuf)[i], sizeof(char));
 		m_cBuf->Offset(sizeof(char));
 	}
 	m_cBuf->Reset();

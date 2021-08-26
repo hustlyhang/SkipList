@@ -17,9 +17,6 @@ public:
 	void Reset() {
 		m_iPos = 0;
 	}
-	const char* GetData() {
-		return &(*this)[0];
-	}
 	void Offset(int _k) {
 		m_iPos += _k;
 	}
