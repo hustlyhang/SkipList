@@ -1,5 +1,5 @@
 # 插入
-- 初始
+- 初始  
   ![new](https://github.com/hustlyhang/SkipList/blob/master/src/new.png)
 - 插入第一个节点
   ![fstNode](https://github.com/hustlyhang/SkipList/blob/master/src/fstNode.png)
