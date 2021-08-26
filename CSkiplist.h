@@ -78,10 +78,6 @@ public:
 	int Size();
 
 private:
-	void GetKVFromString(const std::string&, std::string*, std::string*);
-	bool IsValidString(const std::string&);
-
-private:
 	int m_iMaxLevel;
 	int m_iCurLevel;
 	CNode<K, V>* m_pHeader;
@@ -253,7 +249,7 @@ void CSkipList<K, V>::DeleteNode(K _key) {
 				break;
 			update[i]->m_pForward[i] = curNode->m_pForward[i];
 		}
-		while (m_iCurLevel > 0 && m_pHeader->m_pForward[m_iCurLevel] == 0) 
+		while (m_iCurLevel > 0 && m_pHeader->m_pForward[m_iCurLevel] == nullptr) 
 			m_iCurLevel--;
 		std::cout << "Successfully deleted key " << _key << std::endl;
 		m_iNodeCnt--;
