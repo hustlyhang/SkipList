@@ -118,22 +118,6 @@ int CSkipList<K, V>::GetRandomLevel() {
 };
 
 template<typename K, typename V>
-void CSkipList<K, V>::GetKVFromString(const std::string& _str, std::string* _key, std::string* _value) {
-
-	if (!IsValidString(_str)) return;
-	*_key = _str.substr(0, _str.find(delimiter));
-	*_value = _str.substr(_str.find(delimiter) + 1, _str.length());
-}
-
-template<typename K, typename V>
-bool CSkipList<K, V>::IsValidString(const std::string& _str) {
-
-	if (_str.empty()) return false;
-	if (_str.find(delimiter) == std::string::npos) return false;
-	return true;
-}
-
-template<typename K, typename V>
 CNode<K, V>* CSkipList<K, V>::CreatNode(const K _k, const V _v, int _level) {
 	CNode<K, V>* node = new CNode<K, V>(_k, _v, _level);
 	return node;
