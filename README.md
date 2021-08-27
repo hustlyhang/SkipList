@@ -11,8 +11,8 @@
 - LoadFile    数据加载
 - Size        获取数据量
 # 过程
-- TODO
+- [picture](https://github.com/hustlyhang/SkipList/blob/master/src/skiplist.md)
 # 测试
-- TODO
+
 # 问题
 - 当前仅支持int作为key的类型
