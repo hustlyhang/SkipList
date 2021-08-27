@@ -9,15 +9,14 @@
 #include "StreamBuf.h"
 #include <assert.h>
 
-std::mutex mtx;
-std::string delimiter(":");
+
 
 // Node
 template<typename K, typename V>
 class CNode {
 public:
 	CNode() {}
-	CNode(K, V, int);
+	CNode(const K&, const V&, int);
 	~CNode();
 
 	K GetKey();
@@ -31,7 +30,7 @@ private:
 };
 
 template<typename K, typename V>
-CNode<K, V>::CNode(K _k, V _v, int _lel) {
+CNode<K, V>::CNode(const K& _k, const V& _v, int _lel) {
 	m_Key = _k;
 	m_Value = _v;
 	m_iNodeLevel = _lel;
@@ -68,10 +67,10 @@ public:
 	CSkipList(int, const char*);
 	~CSkipList();
 	int GetRandomLevel();
-	CNode<K, V>* CreatNode(K, V, int);
+	CNode<K, V>* CreatNode(const K&, const V&, int);
 	int InsertNode(K, V);
 	void DisplayList();
-	bool SearchNode(K);
+	bool SearchNode(K, int);
 	void DeleteNode(K);
 	void DumpFile();
 	void LoadFile();
@@ -85,6 +84,7 @@ private:
 	int m_iNodeCnt;
 	CStreamBuf* m_cBuf;
 	const char* m_cFilePath;
+	std::mutex m_mMtx;
 };
 
 template<typename K, typename V>
@@ -114,7 +114,7 @@ int CSkipList<K, V>::GetRandomLevel() {
 };
 
 template<typename K, typename V>
-CNode<K, V>* CSkipList<K, V>::CreatNode(const K _k, const V _v, int _level) {
+CNode<K, V>* CSkipList<K, V>::CreatNode(const K& _k, const V& _v, int _level) {
 	CNode<K, V>* node = new CNode<K, V>(_k, _v, _level);
 	return node;
 }
@@ -140,13 +140,15 @@ void CSkipList<K, V>::DisplayList() {
 
 template<typename K, typename V>
 void CSkipList<K, V>::DumpFile() {
+	m_mMtx.lock();
 	std::cout << "dump_file-----------------" << std::endl;
 	m_sFileStream.open(m_cFilePath, std::ofstream::app | std::ios::binary | std::ofstream::out);
-	if (!m_sFileStream)
+	if (!m_sFileStream) {
+		m_mMtx.unlock();
 		fprintf(stderr, "can't open file\n");
-
+		return;
+	}
 	CNode<K, V>* node = m_pHeader->m_pForward[0];
-
 	while (node != nullptr) {
 		// 将key和value序列化存储
 		(*m_cBuf) << node->GetKey() << node->GetValue();
@@ -160,6 +162,7 @@ void CSkipList<K, V>::DumpFile() {
 	m_cBuf->Reset();
 	m_sFileStream.close();
 	m_sFileStream.clear();
+	m_mMtx.unlock();
 	return;
 }
 
@@ -185,7 +188,7 @@ void CSkipList<K, V>::LoadFile() {
 //        已经存在    1
 template<typename K, typename V>
 int CSkipList<K, V>::InsertNode(K _k, V _v) {
-	mtx.lock();
+	m_mMtx.lock();
 	CNode<K, V>* CurNode = m_pHeader;
 
 	CNode<K, V>** updateNodes = new CNode<K, V>*[m_iMaxLevel + 1];
@@ -203,7 +206,7 @@ int CSkipList<K, V>::InsertNode(K _k, V _v) {
 
 	// 如果当前节点等于插入节点的key
 	if (CurNode && CurNode->GetKey() == _k) {
-		mtx.unlock();
+		m_mMtx.unlock();
 		return 1;
 	}
 
@@ -223,15 +226,14 @@ int CSkipList<K, V>::InsertNode(K _k, V _v) {
 		}
 		m_iNodeCnt++;
 	}
-	mtx.unlock();
+	m_mMtx.unlock();
 	return 0;
 }
 
 
 template<typename K, typename V>
 void CSkipList<K, V>::DeleteNode(K _key) {
-
-	mtx.lock();
+	m_mMtx.lock();
 	CNode<K, V>* curNode = m_pHeader;
 	CNode<K, V>** update = new CNode<K, V>*[m_iMaxLevel + 1];
 	memset(update, 0, sizeof(CNode<K, V>*) * (m_iMaxLevel + 1));
@@ -254,28 +256,28 @@ void CSkipList<K, V>::DeleteNode(K _key) {
 		std::cout << "Successfully deleted key " << _key << std::endl;
 		m_iNodeCnt--;
 	}
-	mtx.unlock();
+	m_mMtx.unlock();
 	return;
 }
 
 template<typename K, typename V>
-bool CSkipList<K, V>::SearchNode(K _key) {
-
-	std::cout << "search_element-----------------" << std::endl;
+bool CSkipList<K, V>::SearchNode(K _key, int _mod) {
+	if (_mod)
+		std::cout << "search_element-----------------" << std::endl;
 	CNode<K, V>* curNode = m_pHeader;
 
 	for (int i = m_iCurLevel; i >= 0; --i)
 		while (curNode->m_pForward[i] && curNode->m_pForward[i]->GetKey() < _key)
 			curNode = curNode->m_pForward[i];
 
-	//reached level 0 and advance pointer to right node, which we search
 	curNode = curNode->m_pForward[0];
 
-	// if current node have key equal to searched key, we get it
 	if (curNode and curNode->GetKey() == _key) {
-		std::cout << "Found key: " << _key << ", value: " << curNode->GetValue() << std::endl;
+		if (_mod)
+			std::cout << "Found key: " << _key << ", value: " << curNode->GetValue() << std::endl;
 		return true;
 	}
-	std::cout << "Not Found Key:" << _key << std::endl;
+	if (_mod)
+		std::cout << "Not Found Key:" << _key << std::endl;
 	return false;
 }
