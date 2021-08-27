@@ -13,6 +13,6 @@
 # 过程
 - [picture](https://github.com/hustlyhang/SkipList/blob/master/src/skiplist.md)
 # 测试
-
+  ![test](https://github.com/hustlyhang/SkipList/blob/master/src/test.png)
 # 问题
 - 当前仅支持int作为key的类型
