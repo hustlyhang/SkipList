@@ -13,6 +13,8 @@
 # 过程
 - [picture](https://github.com/hustlyhang/SkipList/blob/master/src/skiplist.md)
 # 测试
+- 测试相关函数都在[test.h](https://github.com/hustlyhang/SkipList/blob/master/Test.h)里面, 可以根据实际情况调整参数测试  
   ![test](https://github.com/hustlyhang/SkipList/blob/master/src/test.png)
-# 问题
+# TODO
 - 当前仅支持int作为key的类型
+- Node类中传入自己定义的比较函数，支持更多的数据类型
