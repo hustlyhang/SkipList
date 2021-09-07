@@ -9,7 +9,8 @@
 #define NUM_THREADS 4400
 #define TEST_COUNT 1000000
 
-
+const char* testFile = "testFile";
+const int testLayer = 18;
 
 class CTest {
 public:
@@ -87,12 +88,4 @@ inline void CTest::TestInterface() {
     std::cout << std::endl << std::endl;
 }
 
-CSkipList<int, std::string>* CTest::skipList = new CSkipList<int, std::string>(18, "testFile");
-
-int main() {
-    CTest test;
-    // test.TestInterface();
-    test.Test(1);
-    test.Test(0);
-    return 0;
-}
+CSkipList<int, std::string>* CTest::skipList = new CSkipList<int, std::string>(testLayer, testFile);
