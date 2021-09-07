@@ -8,7 +8,7 @@
 #include <string>
 #include "StreamBuf.h"
 #include <assert.h>
-
+#include <set>
 
 
 // Node
@@ -102,6 +102,7 @@ CSkipList<K, V>::CSkipList(int _maxLevel, const char* _path) {
 template<typename K, typename V>
 CSkipList<K, V>::~CSkipList() {
 	if (m_sFileStream.is_open()) m_sFileStream.close();
+	
 	delete m_pHeader;
 }
 
@@ -251,6 +252,9 @@ void CSkipList<K, V>::DeleteNode(K _key) {
 				break;
 			update[i]->m_pForward[i] = curNode->m_pForward[i];
 		}
+		delete curNode;
+		curNode = nullptr;
+		// 更新当前的层数
 		while (m_iCurLevel > 0 && m_pHeader->m_pForward[m_iCurLevel] == nullptr) 
 			m_iCurLevel--;
 		std::cout << "Successfully deleted key " << _key << std::endl;
