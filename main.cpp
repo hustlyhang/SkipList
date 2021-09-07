@@ -2,8 +2,8 @@
 
 int main() {
 	CTest test;
-	// test.TestInterface();// 测试接口
-	test.Test(1);// write
-	test.Test(0);// read
+	test.TestInterface();// 测试接口
+	//test.Test(1);// write
+	//test.Test(0);// read
 	return 0;
 }
