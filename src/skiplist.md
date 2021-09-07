@@ -5,7 +5,6 @@
   ![fstNode](https://github.com/hustlyhang/SkipList/blob/master/src/fstNode.png)
 - 第二个节点
   ![secNode](https://github.com/hustlyhang/SkipList/blob/master/src/secNode.png)
-# 查询
-- TODO
 # 删除
-- TODO
+  ![secNode](https://github.com/hustlyhang/SkipList/blob/master/src/4.png)
+  ![secNode](https://github.com/hustlyhang/SkipList/blob/master/src/5.png)
