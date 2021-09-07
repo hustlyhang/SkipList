@@ -92,9 +92,9 @@ CSkipList<K, V>::CSkipList(int _maxLevel, const char* _path) {
 	m_iMaxLevel = _maxLevel;
 	m_iCurLevel = 0;
 	m_iNodeCnt = 0;
-	K* k = new K;
-	V* v = new V;
-	m_pHeader = new CNode<K, V>(*k, *v, m_iMaxLevel);
+	K k;
+	V v;
+	m_pHeader = new CNode<K, V>(k, v, m_iMaxLevel);
 	m_cBuf = new CStreamBuf();
 	m_cFilePath = _path;
 }
